@@ -31,48 +31,19 @@ object Interaction {
     */
   def tile(temperatures: Iterable[(Location, Temperature)], colors: Iterable[(Temperature, Color)], tile: Tile): Image = {
 
-//    val coords = for {
-//      i <- 0 until HEIGHT
-//      j <- 0 until WIDTH
-//    } yield (i, j)
-//
-
-    //    val pixels = coords.par
-    //      .map({case (x, y) => Tile(x / HEIGHT + tile.x, y / WIDTH + tile.y, tile.zoom)})
-    //      .map(tileLocation)
-    //      .map(Visualization.predictTemperature(temperatures, _))
-    //      .map(Visualization.interpolateColor(colors, _))
-    //      .map(c => Pixel(c.red, c.green, c.blue, 127))
-    //      .toArray
-
-//    val pixels = (0 until HEIGHT * WIDTH).par
-//      .map { elem => {
-//        val (x, y) = (elem / HEIGHT + tile.x, elem / WIDTH + tile.y)
-//          val c = Visualization.interpolateColor(
-//            colors,
-//            Visualization.predictTemperature(
-//              temperatures,
-//              tileLocation(Tile(x, y, tile.zoom))
-//            )
-//          )
-//          Pixel(c.red, c.green, c.blue, 127)
-//        }
-//      }.toArray
-
     val pixels = (0 until HEIGHT * WIDTH)
       .par.map(pos => {
       val x = ((pos % HEIGHT).toDouble / HEIGHT + tile.x).toInt
       val y = ((pos / WIDTH).toDouble / WIDTH + tile.y).toInt
-//        val (x, y) = (pos / HEIGHT + tile.x, pos / WIDTH + tile.y)
 
-//      val c = Visualization.interpolateColor(
-//        colors,
-//        Visualization.predictTemperature(
-//          temperatures,
-//          tileLocation(Tile(x, y, tile.zoom))
-//        )
-//      )
-      val c = Color(0, 0, 0)
+      val c = Visualization.interpolateColor(
+        colors,
+        Visualization.predictTemperature(
+          temperatures,
+          tileLocation(Tile(x, y, tile.zoom))
+        )
+      )
+
       Pixel(c.red, c.green, c.blue, 127)
     }).toArray
 
@@ -96,8 +67,8 @@ object Interaction {
                          ): Unit = {
     val tiles = for {
       zoom <- 0 until 4
-      x <- 0 until HEIGHT
-      y <- 0 until WIDTH
+      x <- 0 until (1 << zoom)
+      y <- 0 until (1 << zoom)
       yearData <- yearlyData
     } yield generateImage(yearData._1, Tile(x, y, zoom), yearData._2)
   }
