@@ -57,8 +57,8 @@ object Visualization {
       else {
         val (lowTempCol, upTempCol) = (sortedPartition._1.last, sortedPartition._2.head)
 
-        def linearInter(x0: Temperature, x1: Temperature): Int = {
-          math.round(lowTempCol._1 + (value - x0) * (upTempCol._1 - lowTempCol._1) / (x1 - x0)).toInt
+        def linearInter(y0: Temperature, y1: Temperature): Int = {
+          math.round(y0 + (value - lowTempCol._1) * (y1 - y0) / (upTempCol._1 - lowTempCol._1)).toInt
         }
 
         Color(
@@ -68,7 +68,6 @@ object Visualization {
         )
       }
     }
-
 
     points.find(_._1 == value) match{
       case Some((_, color)) => color

@@ -8,7 +8,8 @@ trait VisualizationTest extends FunSuite with Checkers {
 
   val testTemp = Seq(
     (Location(32.95, 65.56), 15.00), (Location(58.43, 5.80), 25.00),
-    (Location(41.65, 12.43), 10.00))
+    (Location(41.65, 12.43), 10.00)
+  )
 
   test("predictTemperature") {
     val computed = Visualization.predictTemperature(testTemp, Location(58.43, 5.8))
@@ -44,6 +45,17 @@ trait VisualizationTest extends FunSuite with Checkers {
     assert(computed == expected)
   }
 
+
+  test("interpolateColor 3") {
+    val cols = List((0.0,Color(255,0,0)), (2.147483647E9,Color(0,0,255)))
+    val value = 1.0737418235E9
+
+    var computed = Visualization.interpolateColor(cols, value)
+    val expected = Color(128,0,128)
+    assert(computed == expected)
+
+  }
+  
   test("visualize") {
     val computedImage = Visualization.visualize((Location(0.0, 0.0), 0.0) :: Nil, (0.0, Color(0, 0, 0)) :: Nil)
 

@@ -9,6 +9,7 @@ object Interaction {
 
   val WIDTH = 256
   val HEIGHT = 256
+  val alpha = 127
 
   /**
     * @param tile Tile coordinates
@@ -16,11 +17,10 @@ object Interaction {
     */
   def tileLocation(tile: Tile): Location = {
     val n = 1 << tile.zoom
-    val lon_deg = tile.x / n * 360.0 - 180.0
-    val lat_rad = Math.atan(Math.sinh(Math.PI * (1.0 - 2.0 * tile.y / n)))
-    val lat_deg = lat_rad * 180.0 / Math.PI
+    val lon = tile.x * 360.0 / n - 180.0
+    val lat = Math.atan(Math.sinh(Math.PI * (1.0 - 2.0 * tile.y / n))) * 180.0 / Math.PI
 
-    Location(lat_deg, lon_deg)
+    Location(lat, lon)
   }
 
   /**
@@ -44,13 +44,10 @@ object Interaction {
         )
       )
 
-      Pixel(c.red, c.green, c.blue, 127)
+      Pixel(c.red, c.green, c.blue, alpha)
     }).toArray
 
-
-
-      Image.apply(WIDTH, HEIGHT, pixels)
-
+    Image.apply(WIDTH, HEIGHT, pixels)
   }
 
   /**
